@@ -23,34 +23,37 @@ int main(){
 	
 	ifstream inFile ("project0.txt");
 	ofstream outFile ("project0.enc");
-	char * b;
-	*b =  'T';		// byte, u
 	
 	while(inFile.good() ){
+		char * b = new char;		// allocate memory or get seg fault
 		inFile.read(b, 1);
-		if(DEBUG) cout << hex << unsigned int(b) << endl;
+		if(DEBUG) cout << hex << *b << endl;
+		if(DEBUG) cout << hex << int(*b) << endl;
 		
 		bool odd = 0;
 		for(int x = 0; x < 7; ++x){
-			unsigned char t = *b;
-			t >>= x;
-			t &= 01;		// octal notation
-			if(t)
+			unsigned char byte = *b;
+			byte >>= x;
+			byte &= 01;		// octal notation
+			if(byte)
 				odd = !odd;
 		}
 		
 		if(odd){
-			b |= 0x80;		// add parity bit
+			*b |= 0x80;		// add parity bit
 			if(DEBUG) cout << "Parity bit added." << endl;}
+		else
+			if(DEBUG) cout << "byte unchanged." << endl;
 		
-		if(DEBUG) cout << hex << unsigned int(b) << endl;
-		if(DEBUG) cout << hex << b << endl;
-		if(DEBUG) cout << hex << (unsigned int)b << endl;
+		if(DEBUG) cout << hex << *b << endl;
+		if(DEBUG) cout << hex << (unsigned int)(*b) << endl;
 		
 		outFile.write(b, 1);
 	}
 	
 	inFile.close();
+	outFile.close();		// writes buffer to file
+	
 	
 	return 0;
 }
